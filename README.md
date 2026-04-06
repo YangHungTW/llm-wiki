@@ -20,6 +20,7 @@ vault/
 │   ├── index.md      # Content catalog
 │   └── log.md        # Activity log
 ├── CLAUDE.md         # Schema file (or AGENTS.md, schema.md)
+├── .claude/skills/   # Claude Code skills (optional)
 └── .gitignore
 ```
 
@@ -34,23 +35,41 @@ vault/
 1. Clone this repo or copy it to your machine.
 2. Open a terminal in the repo directory with your LLM agent (Claude Code, Codex, OpenCode, etc.).
 3. Tell the agent: **"Follow INSTALL.md to set up LLM Wiki"**
-4. The agent will walk you through an interactive setup — choosing a language, wiki location, schema format, and creating your first domain vault.
+4. The agent walks you through an interactive setup — choosing a language, wiki location, schema format, and optionally installing Claude Code skills.
+5. Create your first vault with `/llm-wiki-new-vault` or by telling the agent.
+
+Installation and vault creation are separate — install once per machine, create as many domain vaults as you need.
+
+### Claude Code skills
+
+If you use Claude Code, the installer can set up slash commands:
+
+**Global skills** (available everywhere):
+- `/llm-wiki-install` — run the installation on a new machine
+- `/llm-wiki-new-vault <name>` — create a new domain vault
+
+**Project skills** (available inside each vault):
+- `/ingest [filename]` — process a source from `raw/` into the wiki (supports batch mode with `/ingest batch`)
+- `/query [question]` — ask a question and get a synthesized answer with citations
+- `/lint` — health-check the wiki for contradictions, orphan pages, and data gaps
+
+Skills are symlinked from this repo's `templates/skills/`, so updates propagate automatically.
 
 ### Daily use
 
-**Ingest a source:** Drop a file into `raw/` and tell the agent to process it. The agent reads it, discusses key takeaways with you, creates wiki pages, and updates cross-references.
+**Ingest a source:** Drop a file into `raw/` and run `/ingest` (or tell the agent to process it). The agent reads it, discusses key takeaways with you, creates wiki pages, and updates cross-references. A single source may touch 10–15 pages.
 
-**Ask a question:** Ask anything about your wiki's contents. The agent searches the index, reads relevant pages, and synthesizes an answer with citations. Good answers can be saved back as wiki pages.
+**Ask a question:** Run `/query` or ask anything about your wiki's contents. The agent searches the index, reads relevant pages, and synthesizes an answer with citations. Good answers can be saved back as wiki pages.
 
-**Health check:** Ask the agent to lint the wiki. It finds contradictions, orphan pages, missing cross-references, and suggests new sources to look for.
+**Health check:** Run `/lint` or ask the agent to check the wiki. It finds contradictions, orphan pages, missing cross-references, and suggests new sources to look for.
 
-**Create a new vault:** Tell the agent to create a new domain vault at any time (e.g., "Create a new wiki vault for `reading`").
+**Create a new vault:** Run `/llm-wiki-new-vault reading` or tell the agent.
 
 ### Optional tools
 
 - **Obsidian** — browse the wiki with graph view, wikilink navigation, and plugins (Dataview, Marp).
 - **Obsidian Web Clipper** — browser extension to clip web articles directly into `raw/`.
-- **NotebookLM** — use alongside the wiki for quick exploration, then bring insights back into the wiki.
+- **NotebookLM** — use alongside the wiki for quick exploration, triage, or as a source of insights to ingest.
 - **qmd** — local markdown search engine for when the wiki grows large.
 
 ## Supported LLM agents
@@ -62,6 +81,8 @@ The schema file works with any LLM agent that reads project instructions:
 | Claude Code | `CLAUDE.md` |
 | OpenAI Codex | `AGENTS.md` |
 | OpenCode / others | `schema.md` (tool-agnostic) |
+
+Claude Code users get additional slash command skills. Other agents follow the same workflows via the schema file.
 
 ## Credits
 
@@ -91,6 +112,7 @@ vault/
 │   ├── index.md      # 內容目錄
 │   └── log.md        # 活動日誌
 ├── CLAUDE.md         # Schema 檔案（或 AGENTS.md、schema.md）
+├── .claude/skills/   # Claude Code skills（選用）
 └── .gitignore
 ```
 
@@ -105,23 +127,41 @@ vault/
 1. Clone 這個 repo 或複製到你的電腦。
 2. 用你的 LLM 代理（Claude Code、Codex、OpenCode 等）在 repo 目錄開啟終端機。
 3. 告訴代理：**「照 INSTALL.md 來安裝 LLM Wiki」**
-4. 代理會引導你完成互動式設定 — 選擇語言、wiki 位置、schema 格式，並建立第一個 domain vault。
+4. 代理會引導你完成互動式設定 — 選擇語言、wiki 位置、schema 格式，並選擇是否安裝 Claude Code skills。
+5. 用 `/llm-wiki-new-vault` 或告訴代理來建立第一個 vault。
+
+安裝和建立 vault 是分開的 — 每台電腦安裝一次，之後隨時建立新的 domain vault。
+
+### Claude Code Skills
+
+如果你使用 Claude Code，安裝程式可以設定 slash commands：
+
+**全域 skills**（任何地方都能用）：
+- `/llm-wiki-install` — 在新電腦上執行安裝
+- `/llm-wiki-new-vault <name>` — 建立新的 domain vault
+
+**專案 skills**（在每個 vault 內可用）：
+- `/ingest [filename]` — 處理 `raw/` 裡的來源（支援批次模式 `/ingest batch`）
+- `/query [question]` — 提問並取得帶引用的綜合答案
+- `/lint` — 健康檢查，找出矛盾、孤立頁面和資料缺口
+
+Skills 透過 symlink 連結到這個 repo 的 `templates/skills/`，更新時自動同步。
 
 ### 日常使用
 
-**匯入來源：** 把檔案放到 `raw/`，告訴代理處理它。代理會讀取、跟你討論重點、建立 wiki 頁面、更新交叉引用。
+**匯入來源：** 把檔案放到 `raw/`，執行 `/ingest`（或告訴代理處理）。代理會讀取、跟你討論重點、建立 wiki 頁面、更新交叉引用。一個來源可能影響 10–15 個頁面。
 
-**提問：** 問任何關於 wiki 內容的問題。代理搜尋索引、讀取相關頁面、合成帶引用的答案。好的答案可以存回 wiki。
+**提問：** 執行 `/query` 或問任何關於 wiki 內容的問題。代理搜尋索引、讀取相關頁面、合成帶引用的答案。好的答案可以存回 wiki。
 
-**健康檢查：** 請代理 lint wiki。它會找出矛盾、孤立頁面、缺少的交叉引用，並建議新的來源。
+**健康檢查：** 執行 `/lint` 或請代理檢查 wiki。它會找出矛盾、孤立頁面、缺少的交叉引用，並建議新的來源。
 
-**建立新 vault：** 隨時告訴代理建立新的 domain vault（例如：「建立一個 `reading` 的 wiki vault」）。
+**建立新 vault：** 執行 `/llm-wiki-new-vault reading` 或告訴代理。
 
 ### 選用工具
 
 - **Obsidian** — 用圖譜視圖、wikilink 導航和外掛（Dataview、Marp）瀏覽 wiki。
 - **Obsidian Web Clipper** — 瀏覽器擴充套件，直接把網頁文章擷取到 `raw/`。
-- **NotebookLM** — 搭配 wiki 做快速探索，再把洞察帶回 wiki。
+- **NotebookLM** — 搭配 wiki 做快速探索、篩選，或作為可匯入的洞察來源。
 - **qmd** — wiki 變大後可用的本地 markdown 搜尋引擎。
 
 ## 支援的 LLM 代理
@@ -133,6 +173,8 @@ Schema 檔案適用於任何會讀取專案指令的 LLM 代理：
 | Claude Code | `CLAUDE.md` |
 | OpenAI Codex | `AGENTS.md` |
 | OpenCode / 其他 | `schema.md`（工具無關） |
+
+Claude Code 用戶額外獲得 slash command skills。其他代理透過 schema 檔案執行相同的工作流程。
 
 ## 致謝
 

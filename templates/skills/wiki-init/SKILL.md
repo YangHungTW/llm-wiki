@@ -1,5 +1,5 @@
 ---
-name: llm-wiki-new-vault
+name: wiki-init
 description: Create a new LLM Wiki domain vault. Accepts an optional vault name as argument.
 disable-model-invocation: true
 allowed-tools: Bash Read Write

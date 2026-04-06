@@ -140,14 +140,14 @@ Skip this step if `SCHEMA_FORMAT` does not include `CLAUDE.md`.
 
 `[ASK]` Ask the user if they want to install a Claude Code slash command skill. Explain that this adds a global command:
 
-- `/llm-wiki-new-vault` — quickly create a new domain vault
+- `/wiki-init` — quickly create a new domain vault
 
 If **no**, skip to Step 5.
 
 `[ACTION]` Symlink skill directories from templates to the Claude Code skills directory:
 
 ```bash
-ln -s <INSTALL_DIR>/templates/skills/llm-wiki-new-vault ~/.claude/skills/llm-wiki-new-vault
+ln -s <INSTALL_DIR>/templates/skills/wiki-init ~/.claude/skills/wiki-init
 ```
 
 Where `<INSTALL_DIR>` is the absolute path to the directory containing this `INSTALL.md` (e.g. `~/Tools/llm-wiki`). Using symlinks means skill updates propagate automatically when templates are updated.
@@ -155,10 +155,10 @@ Where `<INSTALL_DIR>` is the absolute path to the directory containing this `INS
 `[VERIFY]` Confirm skills are installed and symlinks are valid:
 
 ```bash
-test -L ~/.claude/skills/llm-wiki-new-vault && test -f ~/.claude/skills/llm-wiki-new-vault/SKILL.md && echo "[OK] llm-wiki-new-vault" || echo "[FAIL] llm-wiki-new-vault"
+test -L ~/.claude/skills/wiki-init && test -f ~/.claude/skills/wiki-init/SKILL.md && echo "[OK] wiki-init" || echo "[FAIL] wiki-init"
 ```
 
-After installation, the user can type `/llm-wiki-new-vault` (or `/llm-wiki-new-vault research`) in Claude Code to create new vaults.
+After installation, the user can type `/wiki-init` (or `/wiki-init research`) in Claude Code to create new vaults.
 
 ---
 
@@ -189,14 +189,14 @@ else
 fi
 
 # Check Claude Code global skill (only if applicable)
-if [ -L ~/.claude/skills/llm-wiki-new-vault ] && [ -f ~/.claude/skills/llm-wiki-new-vault/SKILL.md ]; then
-  echo "[OK] Global skill: llm-wiki-new-vault"
+if [ -L ~/.claude/skills/wiki-init ] && [ -f ~/.claude/skills/wiki-init/SKILL.md ]; then
+  echo "[OK] Global skill: wiki-init"
 fi
 
 if $PASS; then
   echo ""
   echo "Installation complete."
-  echo "Create your first vault with: /llm-wiki-new-vault <domain-name>"
+  echo "Create your first vault with: /wiki-init <domain-name>"
   echo "Or tell your LLM agent: \"Create a new wiki vault for <domain-name>\""
 else
   echo ""
@@ -225,7 +225,7 @@ After installation, record these values for reference (the agent should print th
 
 The steps below are used when creating a new domain vault. They are invoked by:
 
-- **Claude Code:** `/llm-wiki-new-vault <domain-name>`
+- **Claude Code:** `/wiki-init <domain-name>`
 - **Other LLM agents:** "Create a new wiki vault for `<domain-name>`"
 - **First-time setup:** After completing the installation steps above
 

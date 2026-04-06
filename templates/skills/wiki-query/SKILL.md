@@ -1,5 +1,5 @@
 ---
-name: query
+name: wiki-query
 description: Ask a question against the wiki and get a synthesized answer with citations.
 disable-model-invocation: true
 allowed-tools: Bash Read Write Edit Glob Grep

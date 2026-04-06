@@ -48,19 +48,19 @@ If you use Claude Code, the installer can set up slash commands:
 - `/wiki-init <name>` — create a new domain vault
 
 **Project skills** (available inside each vault):
-- `/ingest [filename]` — process a source from `raw/` into the wiki (supports batch mode with `/ingest batch`)
-- `/query [question]` — ask a question and get a synthesized answer with citations
-- `/lint` — health-check the wiki for contradictions, orphan pages, and data gaps
+- `/wiki-ingest [filename]` — process a source from `raw/` into the wiki (supports batch mode with `/wiki-ingest batch`)
+- `/wiki-query [question]` — ask a question and get a synthesized answer with citations
+- `/wiki-lint` — health-check the wiki for contradictions, orphan pages, and data gaps
 
 Skills are symlinked from this repo's `templates/skills/`, so updates propagate automatically.
 
 ### Daily use
 
-**Ingest a source:** Drop a file into `raw/` and run `/ingest` (or tell the agent to process it). The agent reads it, discusses key takeaways with you, creates wiki pages, and updates cross-references. A single source may touch 10–15 pages.
+**Ingest a source:** Drop a file into `raw/` and run `/wiki-ingest` (or tell the agent to process it). The agent reads it, discusses key takeaways with you, creates wiki pages, and updates cross-references. A single source may touch 10–15 pages.
 
-**Ask a question:** Run `/query` or ask anything about your wiki's contents. The agent searches the index, reads relevant pages, and synthesizes an answer with citations. Good answers can be saved back as wiki pages.
+**Ask a question:** Run `/wiki-query` or ask anything about your wiki's contents. The agent searches the index, reads relevant pages, and synthesizes an answer with citations. Good answers can be saved back as wiki pages.
 
-**Health check:** Run `/lint` or ask the agent to check the wiki. It finds contradictions, orphan pages, missing cross-references, and suggests new sources to look for.
+**Health check:** Run `/wiki-lint` or ask the agent to check the wiki. It finds contradictions, orphan pages, missing cross-references, and suggests new sources to look for.
 
 **Create a new vault:** Run `/wiki-init reading` or tell the agent.
 
@@ -139,19 +139,19 @@ vault/
 - `/wiki-init <name>` — 建立新的 domain vault
 
 **專案 skills**（在每個 vault 內可用）：
-- `/ingest [filename]` — 處理 `raw/` 裡的來源（支援批次模式 `/ingest batch`）
-- `/query [question]` — 提問並取得帶引用的綜合答案
-- `/lint` — 健康檢查，找出矛盾、孤立頁面和資料缺口
+- `/wiki-ingest [filename]` — 處理 `raw/` 裡的來源（支援批次模式 `/wiki-ingest batch`）
+- `/wiki-query [question]` — 提問並取得帶引用的綜合答案
+- `/wiki-lint` — 健康檢查，找出矛盾、孤立頁面和資料缺口
 
 Skills 透過 symlink 連結到這個 repo 的 `templates/skills/`，更新時自動同步。
 
 ### 日常使用
 
-**匯入來源：** 把檔案放到 `raw/`，執行 `/ingest`（或告訴代理處理）。代理會讀取、跟你討論重點、建立 wiki 頁面、更新交叉引用。一個來源可能影響 10–15 個頁面。
+**匯入來源：** 把檔案放到 `raw/`，執行 `/wiki-ingest`（或告訴代理處理）。代理會讀取、跟你討論重點、建立 wiki 頁面、更新交叉引用。一個來源可能影響 10–15 個頁面。
 
-**提問：** 執行 `/query` 或問任何關於 wiki 內容的問題。代理搜尋索引、讀取相關頁面、合成帶引用的答案。好的答案可以存回 wiki。
+**提問：** 執行 `/wiki-query` 或問任何關於 wiki 內容的問題。代理搜尋索引、讀取相關頁面、合成帶引用的答案。好的答案可以存回 wiki。
 
-**健康檢查：** 執行 `/lint` 或請代理檢查 wiki。它會找出矛盾、孤立頁面、缺少的交叉引用，並建議新的來源。
+**健康檢查：** 執行 `/wiki-lint` 或請代理檢查 wiki。它會找出矛盾、孤立頁面、缺少的交叉引用，並建議新的來源。
 
 **建立新 vault：** 執行 `/wiki-init reading` 或告訴代理。
 

@@ -1,5 +1,5 @@
 ---
-name: ingest
+name: wiki-ingest
 description: Process a new source document from raw/ into the wiki. Accepts an optional filename as argument.
 disable-model-invocation: true
 allowed-tools: Bash Read Write Edit Glob Grep
@@ -12,8 +12,8 @@ Process source document(s) into the wiki. Argument: $ARGUMENTS
 **Important:** Read `WIKI_LANGUAGE` from the vault's config (via `<WIKI_ROOT>/.llm-wiki-config`). All wiki page content (summaries, descriptions, analyses) must be written in this language. Frontmatter keys and filenames remain in English.
 
 Supports two modes:
-- **Single**: `/ingest filename.md` — process one source interactively.
-- **Batch**: `/ingest batch` or `/ingest all` — process all unprocessed files in `raw/` with less supervision.
+- **Single**: `/wiki-ingest filename.md` — process one source interactively.
+- **Batch**: `/wiki-ingest batch` or `/wiki-ingest all` — process all unprocessed files in `raw/` with less supervision.
 
 ## Single mode (default)
 

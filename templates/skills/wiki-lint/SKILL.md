@@ -1,5 +1,5 @@
 ---
-name: lint
+name: wiki-lint
 description: Health-check the wiki for contradictions, orphan pages, missing cross-references, and data gaps.
 disable-model-invocation: true
 allowed-tools: Bash Read Write Edit Glob Grep WebSearch WebFetch

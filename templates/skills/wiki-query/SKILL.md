@@ -23,3 +23,4 @@ Question: $ARGUMENTS
    - **Canvas** — for visual relationship maps.
 6. If the answer is substantial and reusable, offer to save it as an **analysis** or **comparison** page in `wiki/` with proper YAML frontmatter.
 7. If saved, update `wiki/index.md` and append to `wiki/log.md` using format: `## [YYYY-MM-DD] query | <question summary>`
+8. If any wiki pages were created or updated, ask the user if they want to commit. If yes, run: `git add -A && git commit -m "[query] <question summary>"`

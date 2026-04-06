@@ -23,3 +23,4 @@ Run a health check on the wiki.
 4. Suggest new questions to investigate and new sources to look for to fill knowledge gaps.
 5. With user approval, apply fixes (update pages, add cross-references, create missing pages).
 6. Append a lint entry to `wiki/log.md` using format: `## [YYYY-MM-DD] lint | <summary of findings>`
+7. If any wiki pages were created or updated, ask the user if they want to commit. If yes, run: `git add -A && git commit -m "[lint] <summary of findings>"`

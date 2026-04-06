@@ -37,6 +37,7 @@ Supports two modes:
 7. Append an entry to `wiki/log.md` using format: `## [YYYY-MM-DD] ingest | <source title>`
 8. Review existing wiki pages for connections, contradictions, or updates needed. Flag contradictions explicitly.
 9. Use `[[wikilinks]]` for all cross-references between pages.
+10. Ask the user if they want to commit the changes. If yes, run: `git add -A && git commit -m "[ingest] <source title>"`
 
 ## Batch mode
 
@@ -44,3 +45,4 @@ Supports two modes:
 2. Cross-reference with `wiki/index.md` to find files that have not been ingested yet.
 3. For each unprocessed file, run steps 2–9 from single mode with less interaction — summarize key takeaways instead of discussing them, and proceed without waiting for user input on each source.
 4. After all files are processed, present a summary of what was ingested and what pages were created or updated.
+5. Ask the user if they want to commit the changes. If yes, run: `git add -A && git commit -m "[ingest] batch: N sources processed"`

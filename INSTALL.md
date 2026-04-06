@@ -13,7 +13,16 @@ This is an interactive installation playbook. An LLM agent (Claude Code, Codex, 
 - **English**
 - **中文 (Chinese)**
 
-Use the chosen language for all prompts, confirmations, and output messages for the remainder of the installation. The files created (schema, index, log, etc.) are always written in **English** regardless of this choice.
+Use the chosen language for all prompts, confirmations, and output messages for the remainder of the installation.
+
+`[ASK]` Ask the user what language the wiki content (pages, summaries, analyses) should be written in. This is separate from the installation language above. Examples:
+
+- **English**
+- **中文 (Chinese)**
+- **日本語 (Japanese)**
+- Or any other language
+
+Record this as `WIKI_LANGUAGE`. File structure (frontmatter keys, filenames like `index.md`, `log.md`) is always in English regardless of this choice.
 
 ---
 
@@ -122,6 +131,7 @@ WIKI_ROOT=<WIKI_ROOT>
 SCHEMA_FORMAT=<SCHEMA_FORMAT>
 INSTALL_PATH=<path to this INSTALL.md>
 LANGUAGE=<LANGUAGE>
+WIKI_LANGUAGE=<WIKI_LANGUAGE>
 USE_OBSIDIAN=<true|false>
 EOF
 ```
@@ -213,6 +223,7 @@ After installation, record these values for reference (the agent should print th
 | Setting | Value |
 |---------|-------|
 | Language | `<LANGUAGE>` |
+| Wiki language | `<WIKI_LANGUAGE>` |
 | Wiki root | `<WIKI_ROOT>` |
 | Schema format | `<SCHEMA_FORMAT>` |
 | Use Obsidian | `<USE_OBSIDIAN>` |

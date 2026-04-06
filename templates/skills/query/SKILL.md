@@ -9,6 +9,8 @@ allowed-tools: Bash Read Write Edit Glob Grep
 
 Question: $ARGUMENTS
 
+**Important:** Read `WIKI_LANGUAGE` from the vault's config (via `<WIKI_ROOT>/.llm-wiki-config`). Answers and any saved wiki pages must be written in this language. Frontmatter keys remain in English.
+
 1. If no question was provided, ask the user what they want to know.
 2. Read `wiki/index.md` to find relevant pages.
 3. Read the relevant wiki pages.

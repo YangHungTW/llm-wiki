@@ -9,6 +9,8 @@ allowed-tools: Bash Read Write Edit Glob Grep WebSearch WebFetch
 
 Run a health check on the wiki.
 
+**Important:** Read `WIKI_LANGUAGE` from the vault's config (via `<WIKI_ROOT>/.llm-wiki-config`). Reports and any new/updated wiki pages must be written in this language. Frontmatter keys remain in English.
+
 1. Read `wiki/index.md` to get a full list of pages.
 2. Read all wiki pages and scan for:
    - Contradictions between pages.

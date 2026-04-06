@@ -9,6 +9,8 @@ allowed-tools: Bash Read Write Edit Glob Grep
 
 Process source document(s) into the wiki. Argument: $ARGUMENTS
 
+**Important:** Read `WIKI_LANGUAGE` from the vault's config (via `<WIKI_ROOT>/.llm-wiki-config`). All wiki page content (summaries, descriptions, analyses) must be written in this language. Frontmatter keys and filenames remain in English.
+
 Supports two modes:
 - **Single**: `/ingest filename.md` — process one source interactively.
 - **Batch**: `/ingest batch` or `/ingest all` — process all unprocessed files in `raw/` with less supervision.

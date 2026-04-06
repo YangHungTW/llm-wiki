@@ -149,6 +149,7 @@ The agent should suggest adding search tooling when `index.md` becomes unwieldy 
 
 ## Rules
 
+- **Write wiki content in `WIKI_LANGUAGE`** as configured in `{{WIKI_ROOT}}/.llm-wiki-config`. Frontmatter keys, filenames (`index.md`, `log.md`), and structural elements remain in English.
 - **Never modify files in `raw/`.** Sources are immutable.
 - **Always update `index.md`** when creating or modifying wiki pages.
 - **Always append to `log.md`** for ingests, significant queries, and lint passes.

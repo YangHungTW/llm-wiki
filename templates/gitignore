@@ -1,0 +1,10 @@
+# Obsidian workspace (local to each machine)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/plugins/
+.obsidian/core-plugins-migration.json
+.obsidian/hotkeys.json
+
+# OS files
+.DS_Store
+Thumbs.db

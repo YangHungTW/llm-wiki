@@ -44,8 +44,7 @@ Installation and vault creation are separate — install once per machine, creat
 
 If you use Claude Code, the installer can set up slash commands:
 
-**Global skills** (available everywhere):
-- `/llm-wiki-install` — run the installation on a new machine
+**Global skill** (available everywhere):
 - `/llm-wiki-new-vault <name>` — create a new domain vault
 
 **Project skills** (available inside each vault):
@@ -136,8 +135,7 @@ vault/
 
 如果你使用 Claude Code，安裝程式可以設定 slash commands：
 
-**全域 skills**（任何地方都能用）：
-- `/llm-wiki-install` — 在新電腦上執行安裝
+**全域 skill**（任何地方都能用）：
 - `/llm-wiki-new-vault <name>` — 建立新的 domain vault
 
 **專案 skills**（在每個 vault 內可用）：

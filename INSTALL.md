@@ -138,9 +138,8 @@ cat <WIKI_ROOT>/.llm-wiki-config
 
 Skip this step if `SCHEMA_FORMAT` does not include `CLAUDE.md`.
 
-`[ASK]` Ask the user if they want to install Claude Code slash command skills. Explain that this adds two global commands:
+`[ASK]` Ask the user if they want to install a Claude Code slash command skill. Explain that this adds a global command:
 
-- `/llm-wiki-install` — re-run the full installation on another machine
 - `/llm-wiki-new-vault` — quickly create a new domain vault
 
 If **no**, skip to Step 5.
@@ -148,7 +147,6 @@ If **no**, skip to Step 5.
 `[ACTION]` Symlink skill directories from templates to the Claude Code skills directory:
 
 ```bash
-ln -s <INSTALL_DIR>/templates/skills/llm-wiki-install ~/.claude/skills/llm-wiki-install
 ln -s <INSTALL_DIR>/templates/skills/llm-wiki-new-vault ~/.claude/skills/llm-wiki-new-vault
 ```
 
@@ -157,7 +155,6 @@ Where `<INSTALL_DIR>` is the absolute path to the directory containing this `INS
 `[VERIFY]` Confirm skills are installed and symlinks are valid:
 
 ```bash
-test -L ~/.claude/skills/llm-wiki-install && test -f ~/.claude/skills/llm-wiki-install/SKILL.md && echo "[OK] llm-wiki-install" || echo "[FAIL] llm-wiki-install"
 test -L ~/.claude/skills/llm-wiki-new-vault && test -f ~/.claude/skills/llm-wiki-new-vault/SKILL.md && echo "[OK] llm-wiki-new-vault" || echo "[FAIL] llm-wiki-new-vault"
 ```
 
@@ -191,10 +188,7 @@ else
   PASS=false
 fi
 
-# Check Claude Code global skills (only if applicable)
-if [ -L ~/.claude/skills/llm-wiki-install ] && [ -f ~/.claude/skills/llm-wiki-install/SKILL.md ]; then
-  echo "[OK] Global skill: llm-wiki-install"
-fi
+# Check Claude Code global skill (only if applicable)
 if [ -L ~/.claude/skills/llm-wiki-new-vault ] && [ -f ~/.claude/skills/llm-wiki-new-vault/SKILL.md ]; then
   echo "[OK] Global skill: llm-wiki-new-vault"
 fi

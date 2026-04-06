@@ -5,6 +5,9 @@
 .obsidian/core-plugins-migration.json
 .obsidian/hotkeys.json
 
+# Claude Code skills (symlinks are machine-specific)
+.claude/
+
 # OS files
 .DS_Store
 Thumbs.db

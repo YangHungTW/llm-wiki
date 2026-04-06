@@ -86,8 +86,8 @@ When the user asks for a health check:
 
 When the user asks to create a new domain vault:
 
-1. Read the config file at `{{WIKI_ROOT}}/.llm-wiki-config` to get `WIKI_ROOT`, `SCHEMA_FORMAT`, and `INSTALL_PATH`.
-2. Follow Steps 4–7 of the installation guide at the `INSTALL_PATH` recorded in the config.
+1. Read the config file at `{{WIKI_ROOT}}/.llm-wiki-config` to get `WIKI_ROOT`, `SCHEMA_FORMAT`, `INSTALL_PATH`, and `USE_OBSIDIAN`.
+2. Follow the **Vault Creation Guide** section (Vault Steps 1–5) in the installation guide at `INSTALL_PATH`.
 3. Use the same `WIKI_ROOT` and `SCHEMA_FORMAT` from the config.
 
 ## NotebookLM Integration

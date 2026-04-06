@@ -134,9 +134,114 @@ cat <WIKI_ROOT>/.llm-wiki-config
 
 ---
 
-## Step 4: Create First Domain Vault
+## Step 4: Install Claude Code Skills (Optional)
 
-`[ASK]` Ask the user what their first domain/topic vault should be. Provide examples:
+Skip this step if `SCHEMA_FORMAT` does not include `CLAUDE.md`.
+
+`[ASK]` Ask the user if they want to install Claude Code slash command skills. Explain that this adds two global commands:
+
+- `/llm-wiki-install` — re-run the full installation on another machine
+- `/llm-wiki-new-vault` — quickly create a new domain vault
+
+If **no**, skip to Step 5.
+
+`[ACTION]` Symlink skill directories from templates to the Claude Code skills directory:
+
+```bash
+ln -s <INSTALL_DIR>/templates/skills/llm-wiki-install ~/.claude/skills/llm-wiki-install
+ln -s <INSTALL_DIR>/templates/skills/llm-wiki-new-vault ~/.claude/skills/llm-wiki-new-vault
+```
+
+Where `<INSTALL_DIR>` is the absolute path to the directory containing this `INSTALL.md` (e.g. `~/Tools/llm-wiki`). Using symlinks means skill updates propagate automatically when templates are updated.
+
+`[VERIFY]` Confirm skills are installed and symlinks are valid:
+
+```bash
+test -L ~/.claude/skills/llm-wiki-install && test -f ~/.claude/skills/llm-wiki-install/SKILL.md && echo "[OK] llm-wiki-install" || echo "[FAIL] llm-wiki-install"
+test -L ~/.claude/skills/llm-wiki-new-vault && test -f ~/.claude/skills/llm-wiki-new-vault/SKILL.md && echo "[OK] llm-wiki-new-vault" || echo "[FAIL] llm-wiki-new-vault"
+```
+
+After installation, the user can type `/llm-wiki-new-vault` (or `/llm-wiki-new-vault research`) in Claude Code to create new vaults.
+
+---
+
+## Step 5: Final Verification
+
+`[VERIFY]` Run a final check to confirm the installation:
+
+```bash
+WIKI_ROOT="<WIKI_ROOT>"
+PASS=true
+
+echo "=== LLM Wiki Installation Verification ==="
+
+# Check wiki root
+if [ -d "$WIKI_ROOT" ] && [ -w "$WIKI_ROOT" ]; then
+  echo "[OK] Wiki root: $WIKI_ROOT"
+else
+  echo "[FAIL] Wiki root missing or not writable"
+  PASS=false
+fi
+
+# Check config
+if [ -f "$WIKI_ROOT/.llm-wiki-config" ]; then
+  echo "[OK] Config file"
+else
+  echo "[FAIL] Config file missing"
+  PASS=false
+fi
+
+# Check Claude Code global skills (only if applicable)
+if [ -L ~/.claude/skills/llm-wiki-install ] && [ -f ~/.claude/skills/llm-wiki-install/SKILL.md ]; then
+  echo "[OK] Global skill: llm-wiki-install"
+fi
+if [ -L ~/.claude/skills/llm-wiki-new-vault ] && [ -f ~/.claude/skills/llm-wiki-new-vault/SKILL.md ]; then
+  echo "[OK] Global skill: llm-wiki-new-vault"
+fi
+
+if $PASS; then
+  echo ""
+  echo "Installation complete."
+  echo "Create your first vault with: /llm-wiki-new-vault <domain-name>"
+  echo "Or tell your LLM agent: \"Create a new wiki vault for <domain-name>\""
+else
+  echo ""
+  echo "Some checks failed. Review the output above."
+fi
+```
+
+---
+
+## Summary of User Choices
+
+After installation, record these values for reference (the agent should print this):
+
+| Setting | Value |
+|---------|-------|
+| Language | `<LANGUAGE>` |
+| Wiki root | `<WIKI_ROOT>` |
+| Schema format | `<SCHEMA_FORMAT>` |
+| Use Obsidian | `<USE_OBSIDIAN>` |
+
+---
+
+---
+
+# Vault Creation Guide
+
+The steps below are used when creating a new domain vault. They are invoked by:
+
+- **Claude Code:** `/llm-wiki-new-vault <domain-name>`
+- **Other LLM agents:** "Create a new wiki vault for `<domain-name>`"
+- **First-time setup:** After completing the installation steps above
+
+The agent should read `<WIKI_ROOT>/.llm-wiki-config` to get `WIKI_ROOT`, `SCHEMA_FORMAT`, `INSTALL_PATH`, `LANGUAGE`, and `USE_OBSIDIAN` before proceeding.
+
+---
+
+## Vault Step 1: Choose Domain Name
+
+`[ASK]` If no domain name was provided, ask the user. Provide examples:
 
 - `personal` — goals, health, psychology, self-improvement
 - `research` — deep dives on specific topics
@@ -146,7 +251,11 @@ cat <WIKI_ROOT>/.llm-wiki-config
 
 The user may choose any name. Record this as `DOMAIN_NAME`.
 
-`[ACTION]` Scaffold the vault using the template:
+---
+
+## Vault Step 2: Scaffold Vault
+
+`[ACTION]` Create the vault directory structure:
 
 ```
 <WIKI_ROOT>/<DOMAIN_NAME>/
@@ -155,8 +264,13 @@ The user may choose any name. Record this as `DOMAIN_NAME`.
 ├── wiki/                   # LLM-maintained wiki pages
 │   ├── index.md            # Content catalog
 │   └── log.md              # Chronological activity log
-├── <SCHEMA_FILE>           # Schema file (from Step 3)
+├── <SCHEMA_FILE>           # Schema file
 ├── .gitignore              # Git ignore rules
+├── .claude/                # (Only if SCHEMA_FORMAT includes CLAUDE.md)
+│   └── skills/             # Project-level skills
+│       ├── ingest/         # /ingest — process new sources
+│       ├── query/          # /query — ask questions
+│       └── lint/           # /lint — health check
 └── .obsidian/              # (Only if USE_OBSIDIAN=true)
     └── app.json            # Basic Obsidian settings
 ```
@@ -180,6 +294,17 @@ Write the following files using the templates in `templates/`:
 4. `.gitignore` — from `templates/gitignore`
 5. `.obsidian/app.json` — from `templates/obsidian-app.json` **(only if USE_OBSIDIAN=true)**
 
+If `SCHEMA_FORMAT` includes `CLAUDE.md`, also symlink project-level skills:
+
+```bash
+mkdir -p "$VAULT/.claude/skills"
+for skill in ingest query lint; do
+  ln -s <INSTALL_DIR>/templates/skills/$skill "$VAULT/.claude/skills/$skill"
+done
+```
+
+Where `<INSTALL_DIR>` is the absolute path to the directory containing this `INSTALL.md`.
+
 Replace `{{DOMAIN_NAME}}` with the actual domain name in all templates.
 Replace `{{WIKI_ROOT}}` with the actual wiki root path in the schema file.
 Replace `{{DATE}}` with today's date (YYYY-MM-DD) in the log file.
@@ -198,6 +323,12 @@ echo "=== Log ===" && \
 test -f "$VAULT/wiki/log.md" && echo "OK" || echo "MISSING" && \
 echo "=== Gitignore ===" && \
 test -f "$VAULT/.gitignore" && echo "OK" || echo "MISSING"
+# Only if SCHEMA_FORMAT includes CLAUDE.md:
+for skill in ingest query lint; do
+  if [ -L "$VAULT/.claude/skills/$skill" ] && [ -f "$VAULT/.claude/skills/$skill/SKILL.md" ]; then
+    echo "=== Skill: $skill ===" && echo "OK"
+  fi
+done
 # Only if USE_OBSIDIAN=true:
 if [ "<USE_OBSIDIAN>" = "true" ]; then
   echo "=== Obsidian config ===" && \
@@ -207,7 +338,7 @@ fi
 
 ---
 
-## Step 5: Initialize Git Repository
+## Vault Step 3: Initialize Git Repository
 
 `[ACTION]` Initialize a git repo and make the first commit:
 
@@ -228,7 +359,7 @@ Expected: one commit with the initial setup message.
 
 ---
 
-## Step 6: Open in Obsidian (Optional)
+## Vault Step 4: Open in Obsidian (Optional)
 
 Skip this step if `USE_OBSIDIAN=false`.
 
@@ -270,16 +401,16 @@ If **yes**, instruct them to install it from their browser's extension store or 
 
 ---
 
-## Step 7: Final Verification
+## Vault Step 5: Final Verification
 
-`[VERIFY]` Run a final check to confirm everything is in place:
+`[VERIFY]` Run a final check to confirm the vault is ready:
 
 ```bash
 VAULT="<WIKI_ROOT>/<DOMAIN_NAME>"
 SCHEMA="<SCHEMA_FILE>"
 PASS=true
 
-echo "=== LLM Wiki Installation Verification ==="
+echo "=== Vault Verification: <DOMAIN_NAME> ==="
 
 # Check directory structure
 for dir in raw raw/assets wiki; do
@@ -329,38 +460,18 @@ else
   PASS=false
 fi
 
+# Check Claude Code project skills (only if applicable)
+for skill in ingest query lint; do
+  if [ -L "$VAULT/.claude/skills/$skill" ] && [ -f "$VAULT/.claude/skills/$skill/SKILL.md" ]; then
+    echo "[OK] project skill: $skill"
+  fi
+done
+
 if $PASS; then
   echo ""
-  echo "Installation complete. Vault is ready at: $VAULT"
+  echo "Vault ready at: $VAULT"
 else
   echo ""
   echo "Some checks failed. Review the output above."
 fi
 ```
-
----
-
-## Creating Additional Vaults
-
-To create a new domain vault at any time, tell your LLM agent:
-
-> "Create a new wiki vault for `<domain-name>`"
-
-The agent should:
-
-1. Read `<WIKI_ROOT>/.llm-wiki-config` to retrieve `WIKI_ROOT`, `SCHEMA_FORMAT`, and `INSTALL_PATH`.
-2. Follow Steps 4–7 of this guide using the saved values.
-
----
-
-## Summary of User Choices
-
-After installation, record these values for reference (the agent should print this):
-
-| Setting | Value |
-|---------|-------|
-| Language | `<LANGUAGE>` |
-| Wiki root | `<WIKI_ROOT>` |
-| Schema format | `<SCHEMA_FORMAT>` |
-| Use Obsidian | `<USE_OBSIDIAN>` |
-| First vault | `<DOMAIN_NAME>` |

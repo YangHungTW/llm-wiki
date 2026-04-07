@@ -275,7 +275,8 @@ The user may choose any name. Record this as `DOMAIN_NAME`.
 │   └── skills/             # Project-level skills
 │       ├── wiki-ingest/    # /wiki-ingest — process new sources
 │       ├── wiki-query/     # /wiki-query — ask questions
-│       └── wiki-lint/      # /wiki-lint — health check
+│       ├── wiki-lint/      # /wiki-lint — health check
+│       └── wiki-codemap/   # /wiki-codemap — generate codebase notes
 └── .obsidian/              # (Only if USE_OBSIDIAN=true)
     └── app.json            # Basic Obsidian settings
 ```
@@ -303,7 +304,7 @@ If `SCHEMA_FORMAT` includes `CLAUDE.md`, also symlink project-level skills:
 
 ```bash
 mkdir -p "$VAULT/.claude/skills"
-for skill in wiki-ingest wiki-query wiki-lint; do
+for skill in wiki-ingest wiki-query wiki-lint wiki-codemap; do
   ln -s <INSTALL_DIR>/templates/skills/$skill "$VAULT/.claude/skills/$skill"
 done
 ```
@@ -329,7 +330,7 @@ test -f "$VAULT/wiki/log.md" && echo "OK" || echo "MISSING" && \
 echo "=== Gitignore ===" && \
 test -f "$VAULT/.gitignore" && echo "OK" || echo "MISSING"
 # Only if SCHEMA_FORMAT includes CLAUDE.md:
-for skill in wiki-ingest wiki-query wiki-lint; do
+for skill in wiki-ingest wiki-query wiki-lint wiki-codemap; do
   if [ -L "$VAULT/.claude/skills/$skill" ] && [ -f "$VAULT/.claude/skills/$skill/SKILL.md" ]; then
     echo "=== Skill: $skill ===" && echo "OK"
   fi
@@ -466,7 +467,7 @@ else
 fi
 
 # Check Claude Code project skills (only if applicable)
-for skill in wiki-ingest wiki-query wiki-lint; do
+for skill in wiki-ingest wiki-query wiki-lint wiki-codemap; do
   if [ -L "$VAULT/.claude/skills/$skill" ] && [ -f "$VAULT/.claude/skills/$skill/SKILL.md" ]; then
     echo "[OK] project skill: $skill"
   fi

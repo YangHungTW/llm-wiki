@@ -12,6 +12,10 @@ wiki/           # LLM-maintained pages (you own this)
   log.md        # Chronological activity log — append only
 ```
 
+### Filename convention for `raw/`
+
+When the LLM saves files to `raw/`, use a datetime prefix: `YYYY-MM-DD-<descriptive-name>.md` (e.g. `2026-04-07-project-api-codemap.md`). This tracks when the source was added. Files added manually by the user (e.g. via Obsidian Web Clipper) do not need to follow this convention.
+
 ## Page Conventions
 
 - All wiki pages are Markdown files in `wiki/`.

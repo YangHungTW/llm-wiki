@@ -51,6 +51,7 @@ If you use Claude Code, the installer can set up slash commands:
 - `/wiki-ingest [filename]` — process a source from `raw/` into the wiki (supports batch mode with `/wiki-ingest batch`)
 - `/wiki-query [question]` — ask a question and get a synthesized answer with citations
 - `/wiki-lint` — health-check the wiki for contradictions, orphan pages, and data gaps
+- `/wiki-codemap [path]` — read a codebase or file and generate understanding notes into `raw/`
 
 Skills are symlinked from this repo's `templates/skills/`, so updates propagate automatically.
 
@@ -142,6 +143,7 @@ vault/
 - `/wiki-ingest [filename]` — 處理 `raw/` 裡的來源（支援批次模式 `/wiki-ingest batch`）
 - `/wiki-query [question]` — 提問並取得帶引用的綜合答案
 - `/wiki-lint` — 健康檢查，找出矛盾、孤立頁面和資料缺口
+- `/wiki-codemap [path]` — 讀取 codebase 或檔案，產生理解筆記存到 `raw/`
 
 Skills 透過 symlink 連結到這個 repo 的 `templates/skills/`，更新時自動同步。
 

@@ -44,12 +44,14 @@ Installation and vault creation are separate — install once per machine, creat
 
 If you use Claude Code, the installer can set up slash commands:
 
-**Global skill** (available everywhere):
+**Global skills** (available everywhere):
 - `/wiki-init <name>` — create a new domain vault
+- `/wiki-query <vault> <question>` — query any vault from anywhere; use `?` to list vaults, comma-separate for cross-vault comparison
+- `/wiki-add <vault> <source>` — add a file, folder, URL, or pasted text to any vault's `raw/`, then optionally trigger ingest
 
 **Project skills** (available inside each vault):
 - `/wiki-ingest [filename]` — process a source from `raw/` into the wiki (supports batch mode with `/wiki-ingest batch`)
-- `/wiki-query [question]` — ask a question and get a synthesized answer with citations
+- `/wiki-query [question]` — ask a question and get a synthesized answer with citations (vault already known from context)
 - `/wiki-lint` — health-check the wiki for contradictions, orphan pages, and data gaps
 - `/wiki-codemap [path]` — read a codebase or file and generate understanding notes into `raw/`
 
@@ -136,12 +138,14 @@ vault/
 
 如果你使用 Claude Code，安裝程式可以設定 slash commands：
 
-**全域 skill**（任何地方都能用）：
+**全域 skills**（任何地方都能用）：
 - `/wiki-init <name>` — 建立新的 domain vault
+- `/wiki-query <vault> <question>` — 從任意目錄查詢指定 vault；用 `?` 列出 vault，逗號分隔可跨 vault 比較
+- `/wiki-add <vault> <source>` — 從任意目錄加入 file/folder/URL/貼上內容到指定 vault 的 `raw/`，可選觸發 ingest
 
 **專案 skills**（在每個 vault 內可用）：
 - `/wiki-ingest [filename]` — 處理 `raw/` 裡的來源（支援批次模式 `/wiki-ingest batch`）
-- `/wiki-query [question]` — 提問並取得帶引用的綜合答案
+- `/wiki-query [question]` — 提問並取得帶引用的綜合答案（vault 已由 context 決定）
 - `/wiki-lint` — 健康檢查，找出矛盾、孤立頁面和資料缺口
 - `/wiki-codemap [path]` — 讀取 codebase 或檔案，產生理解筆記存到 `raw/`
 

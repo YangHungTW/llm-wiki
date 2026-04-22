@@ -148,9 +148,11 @@ cat <WIKI_ROOT>/.llm-wiki-config
 
 Skip this step if `SCHEMA_FORMAT` does not include `CLAUDE.md`.
 
-`[ASK]` Ask the user if they want to install a Claude Code slash command skill. Explain that this adds a global command:
+`[ASK]` Ask the user if they want to install Claude Code slash command skills. Explain that this adds these global commands:
 
-- `/wiki-init` — quickly create a new domain vault
+- `/wiki-init` — create a new domain vault
+- `/wiki-query` — query any vault from anywhere (with vault selection)
+- `/wiki-add` — add a file, folder, URL, or pasted text to any vault's `raw/`
 
 If **no**, skip to Step 5.
 
@@ -158,17 +160,26 @@ If **no**, skip to Step 5.
 
 ```bash
 ln -s <INSTALL_DIR>/templates/skills/wiki-init ~/.claude/skills/wiki-init
+ln -s <INSTALL_DIR>/templates/skills/wiki-query-global ~/.claude/skills/wiki-query
+ln -s <INSTALL_DIR>/templates/skills/wiki-add ~/.claude/skills/wiki-add
 ```
 
 Where `<INSTALL_DIR>` is the absolute path to the directory containing this `INSTALL.md` (e.g. `~/Tools/llm-wiki`). Using symlinks means skill updates propagate automatically when templates are updated.
 
+Note: `wiki-query-global` is the user-level query skill (vault-aware). The project-level `wiki-query` (used inside a vault directory) lives in `templates/skills/wiki-query` and is symlinked per-vault automatically during vault creation.
+
 `[VERIFY]` Confirm skills are installed and symlinks are valid:
 
 ```bash
-test -L ~/.claude/skills/wiki-init && test -f ~/.claude/skills/wiki-init/SKILL.md && echo "[OK] wiki-init" || echo "[FAIL] wiki-init"
+test -L ~/.claude/skills/wiki-init  && test -f ~/.claude/skills/wiki-init/SKILL.md  && echo "[OK] wiki-init"  || echo "[FAIL] wiki-init"
+test -L ~/.claude/skills/wiki-query && test -f ~/.claude/skills/wiki-query/SKILL.md && echo "[OK] wiki-query" || echo "[FAIL] wiki-query"
+test -L ~/.claude/skills/wiki-add   && test -f ~/.claude/skills/wiki-add/SKILL.md   && echo "[OK] wiki-add"   || echo "[FAIL] wiki-add"
 ```
 
-After installation, the user can type `/wiki-init` (or `/wiki-init research`) in Claude Code to create new vaults.
+After installation:
+- `/wiki-init <domain-name>` — create a new vault
+- `/wiki-query <vault> <question>` or `/wiki-query ?` — query from anywhere
+- `/wiki-add <vault> <source>` — add sources from anywhere
 
 ---
 
@@ -198,10 +209,12 @@ else
   PASS=false
 fi
 
-# Check Claude Code global skill (only if applicable)
-if [ -L ~/.claude/skills/wiki-init ] && [ -f ~/.claude/skills/wiki-init/SKILL.md ]; then
-  echo "[OK] Global skill: wiki-init"
-fi
+# Check Claude Code global skills (only if applicable)
+for skill in wiki-init wiki-query wiki-add; do
+  if [ -L ~/.claude/skills/$skill ] && [ -f ~/.claude/skills/$skill/SKILL.md ]; then
+    echo "[OK] Global skill: $skill"
+  fi
+done
 
 if $PASS; then
   echo ""
@@ -271,6 +284,7 @@ The user may choose any name. Record this as `DOMAIN_NAME`.
 │   └── log.md              # Chronological activity log
 ├── <SCHEMA_FILE>           # Schema file
 ├── .gitignore              # Git ignore rules
+├── README.md               # Vault usage guide (bilingual EN/ZH)
 ├── .claude/                # (Only if SCHEMA_FORMAT includes CLAUDE.md)
 │   └── skills/             # Project-level skills
 │       ├── wiki-ingest/    # /wiki-ingest — process new sources
@@ -278,7 +292,8 @@ The user may choose any name. Record this as `DOMAIN_NAME`.
 │       ├── wiki-lint/      # /wiki-lint — health check
 │       └── wiki-codemap/   # /wiki-codemap — generate codebase notes
 └── .obsidian/              # (Only if USE_OBSIDIAN=true)
-    └── app.json            # Basic Obsidian settings
+    ├── app.json            # Basic Obsidian settings
+    └── graph.json          # Graph view (exclude raw/ from graph)
 ```
 
 Commands:
@@ -298,7 +313,9 @@ Write the following files using the templates in `templates/`:
 2. `wiki/log.md` — from `templates/log.md`
 3. Schema file — from `templates/schema.md`, written to the chosen filename(s)
 4. `.gitignore` — from `templates/gitignore`
-5. `.obsidian/app.json` — from `templates/obsidian-app.json` **(only if USE_OBSIDIAN=true)**
+5. `README.md` — from `templates/README.md`
+6. `.obsidian/app.json` — from `templates/obsidian-app.json` **(only if USE_OBSIDIAN=true)**
+7. `.obsidian/graph.json` — from `templates/graph.json` **(only if USE_OBSIDIAN=true)**
 
 If `SCHEMA_FORMAT` includes `CLAUDE.md`, also symlink project-level skills:
 
@@ -312,7 +329,7 @@ done
 Where `<INSTALL_DIR>` is the absolute path to the directory containing this `INSTALL.md`.
 
 Replace `{{DOMAIN_NAME}}` with the actual domain name in all templates.
-Replace `{{WIKI_ROOT}}` with the actual wiki root path in the schema file.
+Replace `{{WIKI_ROOT}}` with the actual wiki root path in the schema file and README.
 Replace `{{DATE}}` with today's date (YYYY-MM-DD) in the log file.
 
 `[VERIFY]` Confirm vault structure:
@@ -328,7 +345,9 @@ test -f "$VAULT/wiki/index.md" && echo "OK" || echo "MISSING" && \
 echo "=== Log ===" && \
 test -f "$VAULT/wiki/log.md" && echo "OK" || echo "MISSING" && \
 echo "=== Gitignore ===" && \
-test -f "$VAULT/.gitignore" && echo "OK" || echo "MISSING"
+test -f "$VAULT/.gitignore" && echo "OK" || echo "MISSING" && \
+echo "=== README ===" && \
+test -f "$VAULT/README.md" && echo "OK" || echo "MISSING"
 # Only if SCHEMA_FORMAT includes CLAUDE.md:
 for skill in wiki-ingest wiki-query wiki-lint wiki-codemap; do
   if [ -L "$VAULT/.claude/skills/$skill" ] && [ -f "$VAULT/.claude/skills/$skill/SKILL.md" ]; then
@@ -337,14 +356,18 @@ for skill in wiki-ingest wiki-query wiki-lint wiki-codemap; do
 done
 # Only if USE_OBSIDIAN=true:
 if [ "<USE_OBSIDIAN>" = "true" ]; then
-  echo "=== Obsidian config ===" && \
-  test -f "$VAULT/.obsidian/app.json" && echo "OK" || echo "MISSING"
+  echo "=== Obsidian app.json ===" && \
+  test -f "$VAULT/.obsidian/app.json" && echo "OK" || echo "MISSING" && \
+  echo "=== Obsidian graph.json ===" && \
+  test -f "$VAULT/.obsidian/graph.json" && echo "OK" || echo "MISSING"
 fi
 ```
 
 ---
 
-## Vault Step 3: Initialize Git Repository
+## Vault Step 3: Initialize Git Repository (New Vaults Only)
+
+Skip this step when adopting an existing vault that already has a `.git/` directory.
 
 `[ACTION]` Initialize a git repo and make the first commit:
 
@@ -439,7 +462,7 @@ if [ "<USE_OBSIDIAN>" = "true" ]; then
 fi
 
 # Check files
-for file in wiki/index.md wiki/log.md "$SCHEMA" .gitignore; do
+for file in wiki/index.md wiki/log.md "$SCHEMA" .gitignore README.md; do
   if [ -f "$VAULT/$file" ]; then
     echo "[OK] $file"
   else
@@ -450,12 +473,14 @@ done
 
 # Check Obsidian config (only if USE_OBSIDIAN=true)
 if [ "<USE_OBSIDIAN>" = "true" ]; then
-  if [ -f "$VAULT/.obsidian/app.json" ]; then
-    echo "[OK] .obsidian/app.json"
-  else
-    echo "[FAIL] .obsidian/app.json missing"
-    PASS=false
-  fi
+  for ofile in .obsidian/app.json .obsidian/graph.json; do
+    if [ -f "$VAULT/$ofile" ]; then
+      echo "[OK] $ofile"
+    else
+      echo "[FAIL] $ofile missing"
+      PASS=false
+    fi
+  done
 fi
 
 # Check git
@@ -481,3 +506,149 @@ else
   echo "Some checks failed. Review the output above."
 fi
 ```
+
+---
+
+---
+
+# Vault Adoption Guide
+
+The steps below are used when adopting an **existing directory** as an LLM Wiki vault. This is for directories that already contain content (e.g. markdown notes, Obsidian vaults, raw documents) and the user wants to bring them under LLM Wiki management without losing existing data.
+
+This guide is invoked when `/wiki-init <name>` detects that `<WIKI_ROOT>/<name>` already exists.
+
+The agent should read `<WIKI_ROOT>/.llm-wiki-config` to get `WIKI_ROOT`, `SCHEMA_FORMAT`, `INSTALL_PATH`, `LANGUAGE`, and `USE_OBSIDIAN` before proceeding.
+
+---
+
+## Adopt Step 1: Inventory Existing Content
+
+`[ACTION]` Scan the existing directory and report what's already present:
+
+```bash
+VAULT="<WIKI_ROOT>/<DOMAIN_NAME>"
+
+echo "=== Existing Structure ==="
+echo "--- Directories ---"
+find "$VAULT" -maxdepth 2 -type d | sort
+echo "--- Files (top 2 levels) ---"
+find "$VAULT" -maxdepth 2 -type f | sort
+echo "--- File count ---"
+find "$VAULT" -type f | wc -l
+```
+
+`[ASK]` Show the user the inventory and ask:
+
+1. **Which existing files should go into `raw/`?** (e.g. "everything in `notes/`", "all the `.md` files in the root", "leave them where they are")
+2. **Are there any existing wiki-style pages that should go into `wiki/`?** (e.g. index files, summaries the user has already written)
+3. **Should any files be left in place as-is?** (e.g. existing `.obsidian/` config, other tool configs)
+
+---
+
+## Adopt Step 2: Create Missing Structure
+
+`[ACTION]` Create only the directories and files that don't already exist. Never overwrite existing files.
+
+```bash
+VAULT="<WIKI_ROOT>/<DOMAIN_NAME>"
+
+# Create directories only if missing
+[ -d "$VAULT/raw" ]        || mkdir -p "$VAULT/raw"
+[ -d "$VAULT/raw/assets" ] || mkdir -p "$VAULT/raw/assets"
+[ -d "$VAULT/wiki" ]       || mkdir -p "$VAULT/wiki"
+```
+
+For each of these files, **only create if missing**:
+
+| File | Template | Action if exists |
+|------|----------|-----------------|
+| `wiki/index.md` | `templates/index.md` | Skip — user may have existing content |
+| `wiki/log.md` | `templates/log.md` | Skip — append adoption entry later |
+| Schema file | `templates/schema.md` | Skip — user may have existing CLAUDE.md/AGENTS.md |
+| `.gitignore` | `templates/gitignore` | Merge — append missing entries without duplicating |
+| `README.md` | `templates/README.md` | Skip — user may have existing README |
+
+If `USE_OBSIDIAN=true`:
+
+```bash
+mkdir -p "$VAULT/.obsidian"
+# Only write config files if missing
+[ -f "$VAULT/.obsidian/app.json" ]   || cp templates/obsidian-app.json "$VAULT/.obsidian/app.json"
+[ -f "$VAULT/.obsidian/graph.json" ] || cp templates/graph.json "$VAULT/.obsidian/graph.json"
+```
+
+If `SCHEMA_FORMAT` includes `CLAUDE.md`, create skill symlinks (only if missing):
+
+```bash
+mkdir -p "$VAULT/.claude/skills"
+for skill in wiki-ingest wiki-query wiki-lint wiki-codemap; do
+  [ -L "$VAULT/.claude/skills/$skill" ] || ln -s <INSTALL_DIR>/templates/skills/$skill "$VAULT/.claude/skills/$skill"
+done
+```
+
+Replace `{{DOMAIN_NAME}}`, `{{WIKI_ROOT}}`, and `{{DATE}}` in any newly created template files.
+
+---
+
+## Adopt Step 3: Relocate Existing Files (If Requested)
+
+`[ACTION]` Based on the user's answers in Adopt Step 1, move files to their new locations. Use `mv` (not `cp`) to avoid duplication:
+
+```bash
+# Example: move user-specified files into raw/
+# mv "$VAULT/<source-path>" "$VAULT/raw/"
+
+# Example: move user-specified wiki pages into wiki/
+# mv "$VAULT/<page-path>" "$VAULT/wiki/"
+```
+
+**Rules:**
+- Always confirm moves with the user before executing.
+- Never delete files — only relocate.
+- If `wiki/index.md` already exists and the user has pages to catalogue, offer to update the existing index rather than replacing it.
+
+---
+
+## Adopt Step 4: Bootstrap Index and Log
+
+`[ACTION]` If `wiki/index.md` was newly created (empty template), scan existing content in `raw/` and `wiki/` and populate the index with what's already there.
+
+`[ACTION]` If `wiki/log.md` was newly created or already existed, append an adoption entry:
+
+```markdown
+## [{{DATE}}] adopt | Existing directory adopted as LLM Wiki vault
+
+Adopted existing directory with N files. Structure created: raw/, wiki/, schema.
+```
+
+If `wiki/log.md` already existed, append to it. If newly created, the template already has an init entry — replace `init | Vault created` with the adoption entry above.
+
+---
+
+## Adopt Step 5: Initialize Git (If Needed)
+
+`[ACTION]` Only initialize git if there is no existing `.git/` directory:
+
+```bash
+VAULT="<WIKI_ROOT>/<DOMAIN_NAME>"
+if [ ! -d "$VAULT/.git" ]; then
+  cd "$VAULT"
+  git init
+  git add -A
+  git commit -m "Adopt existing directory as LLM Wiki vault: <DOMAIN_NAME>"
+else
+  echo "Git already initialized — skipping."
+  # Stage and commit the new LLM Wiki files
+  cd "$VAULT"
+  git add -A
+  git status
+fi
+```
+
+`[ASK]` If git was already initialized, show `git status` and ask the user if they want to commit the new LLM Wiki scaffolding files.
+
+---
+
+## Adopt Step 6: Final Verification
+
+`[VERIFY]` Run the same verification as Vault Step 5 (from the Vault Creation Guide above). The checks are identical — both new and adopted vaults should pass the same criteria.

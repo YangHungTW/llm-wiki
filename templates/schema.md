@@ -86,12 +86,14 @@ When the user asks for a health check:
 4. With user approval, apply fixes.
 5. Append a lint entry to `wiki/log.md`.
 
-### Create New Vault
+### Create or Adopt Vault
 
-When the user asks to create a new domain vault:
+When the user asks to create a new domain vault or adopt an existing directory:
 
 1. Read the config file at `{{WIKI_ROOT}}/.llm-wiki-config` to get `WIKI_ROOT`, `SCHEMA_FORMAT`, `INSTALL_PATH`, and `USE_OBSIDIAN`.
-2. Follow the **Vault Creation Guide** section (Vault Steps 1–5) in the installation guide at `INSTALL_PATH`.
+2. Check if the target directory already exists.
+   - **New vault:** Follow the **Vault Creation Guide** (Vault Steps 1–5) in the installation guide at `INSTALL_PATH`.
+   - **Existing directory:** Follow the **Vault Adoption Guide** (Adopt Steps 1–6) in the installation guide at `INSTALL_PATH`.
 3. Use the same `WIKI_ROOT` and `SCHEMA_FORMAT` from the config.
 
 ## NotebookLM Integration

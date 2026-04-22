@@ -269,6 +269,22 @@ The agent should read `<WIKI_ROOT>/.llm-wiki-config` to get `WIKI_ROOT`, `SCHEMA
 
 The user may choose any name. Record this as `DOMAIN_NAME`.
 
+`[ASK]` Ask the user to briefly describe the domain context. This will be written into the schema to guide the LLM's behavior. Collect three things:
+
+1. **Topic description** — What is this vault about? (1-2 sentences)
+   - Example: "Tracking my personal health data, habits, and self-improvement experiments."
+2. **Goals** — What does the user want to achieve with this wiki? (1-3 bullet points)
+   - Example: "Identify patterns between sleep, exercise, and productivity."
+3. **Key questions** — What questions is the user trying to answer? (1-5 bullet points)
+   - Example: "What daily habits have the strongest correlation with my energy levels?"
+
+Record these as `DOMAIN_DESCRIPTION`, `GOALS`, and `KEY_QUESTIONS`. These are filled into the schema's Domain Context section.
+
+If the user wants to skip this, use sensible defaults:
+- `DOMAIN_DESCRIPTION`: "A knowledge base for {{DOMAIN_NAME}}."
+- `GOALS`: "- Build a structured understanding of {{DOMAIN_NAME}} over time."
+- `KEY_QUESTIONS`: "- (To be discovered as sources are added.)"
+
 ---
 
 ## Vault Step 2: Scaffold Vault
@@ -328,9 +344,13 @@ done
 
 Where `<INSTALL_DIR>` is the absolute path to the directory containing this `INSTALL.md`.
 
-Replace `{{DOMAIN_NAME}}` with the actual domain name in all templates.
-Replace `{{WIKI_ROOT}}` with the actual wiki root path in the schema file and README.
-Replace `{{DATE}}` with today's date (YYYY-MM-DD) in the log file.
+Replace these placeholders in all templates:
+- `{{DOMAIN_NAME}}` — the vault name
+- `{{WIKI_ROOT}}` — the wiki root path (in schema file and README)
+- `{{DATE}}` — today's date (YYYY-MM-DD, in log file)
+- `{{DOMAIN_DESCRIPTION}}` — the topic description (in schema file)
+- `{{GOALS}}` — the goals (in schema file)
+- `{{KEY_QUESTIONS}}` — the key questions (in schema file)
 
 `[VERIFY]` Confirm vault structure:
 
@@ -586,7 +606,9 @@ for skill in wiki-ingest wiki-query wiki-lint wiki-codemap; do
 done
 ```
 
-Replace `{{DOMAIN_NAME}}`, `{{WIKI_ROOT}}`, and `{{DATE}}` in any newly created template files.
+`[ASK]` If the schema file was newly created, ask the user for the **Domain Context** (topic description, goals, key questions) — same as Vault Step 1 in the Vault Creation Guide. If the user skips, use the same defaults.
+
+Replace `{{DOMAIN_NAME}}`, `{{WIKI_ROOT}}`, `{{DATE}}`, `{{DOMAIN_DESCRIPTION}}`, `{{GOALS}}`, and `{{KEY_QUESTIONS}}` in any newly created template files.
 
 ---
 
